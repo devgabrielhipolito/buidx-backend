@@ -4,7 +4,8 @@ interface IUserModel {
   name: string;
   email: string;
   password: string;
-  permission;
+  permission: string;
+  _id: number;
 }
 
 const UserSchema = new Schema<IUserModel>({
@@ -12,6 +13,7 @@ const UserSchema = new Schema<IUserModel>({
   email: String,
   password: String,
   permission: String,
+  _id: Number,
 });
 
 export const UserModel = model("users", UserSchema);
