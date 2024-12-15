@@ -10,6 +10,16 @@ const generateId = () => {
   return Math.floor(Math.random() * 3000);
 };
 
+router.get(
+  "/users/allusers",
+  async (req: Request, res: Response): Promise<any> => {
+    const allUsers = await UserModel.find();
+    if (allUsers) {
+      return res.status(301).json({ allUsers });
+    }
+  }
+);
+
 router.post(
   "/users/createuser",
   async (req: Request, res: Response): Promise<any> => {
@@ -26,7 +36,7 @@ router.post(
     const salt = await bcrypt.genSalt(12);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const newUser = new UserModel({
+    const newUser = await new UserModel({
       email: email,
       name: name,
       password: passwordHash,
@@ -34,19 +44,20 @@ router.post(
       _id: generateId(),
     });
 
-    const allUsers = await UserModel.find();
-
     try {
       await newUser.save();
-      console.log(allUsers);
+      const allUsers = await UserModel.find();
+      console.log("usuario criado", newUser);
       return res
         .status(200)
         .json({ message: "Usuario criado com sucesso", allUsers });
-    } catch (error) {
-      return res.status(201).json({ message: "Usuario não criado" });
+    } catch (error: any) {
+      return res
+        .status(201)
+        .json({ message: "Usuario não criado", error: error.message });
     }
   }
-); 
+);
 
 router.delete(
   "/users/delete/:id",

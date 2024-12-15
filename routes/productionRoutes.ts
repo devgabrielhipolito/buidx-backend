@@ -74,7 +74,7 @@ router.post(
       // Buscar a lista atualizada após salvar o novo documento
       const allDate = await productionModel.find();
       console.log(new_production);
-      return res.status(201).json({ data: allDate, status: "Ok" });
+      return res.status(201).json({ data: allDate, status: "concluido" });
     } catch (error) {
       return res.status(500).json({ status: error });
     }
